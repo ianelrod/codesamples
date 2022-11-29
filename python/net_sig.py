@@ -6,8 +6,8 @@ import ast
 import signal
 import os
 
-# b = context.binary = ELF('/challenge/' + os.environ['CHALLENGE_NAME'])
-b = context.binary = ELF('/home/hacker/pipe')
+b = context.binary = ELF('/challenge/' + os.environ['CHALLENGE_NAME'])
+# b = context.binary = ELF('/home/hacker/pipe')
 
 port = 0
 
@@ -37,21 +37,21 @@ if not os.path.exists(outpath):
 
 with s.Popen('/home/hacker/wrap.sh', text=True, close_fds=False) if not args.REMOTE else remote('', port) as p:
     sleep(1)
-    # outs = os.write(r, "asjcescj")
+    outs = p.recvrepeat(0.1).decode('utf-8', 'backslashreplace')
     # w.close()
     # print(outs)
-    # pid_r = re.compile(r"\(PID\s(.*)\)")
-    # sig_r = re.compile(r"\['.*']$")
+    pid_r = re.compile(r"\(PID\s(.*)\)")
+    sig_r = re.compile(r"\['.*']$")
 
-    # pid = int(pid_r.search(outs).group(1).strip())
-    # sig = sig_r.search(outs).group(0).strip()
+    pid = int(pid_r.search(outs).group(1).strip())
+    sig = sig_r.search(outs).group(0).strip()
     # pid = input("Paste PID here: ")
     # pid = int(pid)
     # sig = input("Paste array here: ")
     # sig = ast.literal_eval(sig)
 
-    # i = 0
-    # while i < len(sig):
-    #     os.kill(pid, signal.Signals[sig[i]].value)
-    #     sleep(0.01)
-    #     i+=1
+    i = 0
+    while i < len(sig):
+        os.kill(pid, signal.Signals[sig[i]].value)
+        sleep(0.01)
+        i+=1

